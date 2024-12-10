@@ -22,21 +22,32 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <field name="name"/>
-                    <field name="description"/>
-                    <field name="postcode"/>
-                    <field name="date_availability"/>
-                    <field name="expected_price"/>
-                    <field name="selling_price"/>
-                    <field name="bedrooms"/>
-                    <field name="living_area"/>
-                    <field name="facades"/>
-                    <field name="garage"/>
-                    <field name="garden"/>
-                    <field name="garden_area"/>
-                    <field name="garden_orientation"/>
-                    <field name="state"/>
-                    <field name="active"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="postcode"/>
+                            <field name="date_availability"/>
+                        </group>
+                        <group>
+                            <field name="expected_price"/>
+                            <field name="selling_price"/>
+                        </group>
+                    </group>
+
+                    <group string= "Description">
+                        <field name="description"/>
+                        <field name="bedrooms"/>
+                        <field name="living_area"/>
+                        <field name="facades"/>
+                        <field name="garage"/>
+                        <field name="garden"/>
+                        <field name="garden_area"/>
+                        <field name="garden_orientation"/>
+                        <field name="state"/>
+                        <field name="active"/>
+                    </group>
                 </group>
             </form>
         </field>
@@ -47,7 +58,4 @@
         <field name="res_model">real.estate.property</field>
         <field name="view_mode">list,form</field>
     </record>
-<!-- 
-    <menuitem id="estate_property_menu" name="Real Estate" sequence="10"/>
-    <menuitem id="estate_property_submenu" name="Properties" parent="estate_property_menu" action="action_real_estate_property" sequence="1"/> -->
 </odoo>
