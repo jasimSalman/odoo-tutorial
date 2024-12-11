@@ -10,6 +10,7 @@
                 <field name="bedrooms" string="Bedrooms"/>
                 <field name="living_area" string="Living Area (sqm)"/>
                 <field name="facades" string="Facades"/>
+                <field name="property_type_id" string="Type"/>
 
                 <filter string="Available" name="filter_available_state" domain="[('state', 'in', ['New', 'Offer Received'])]"/>
                 <group expand="1" string="Group by">
