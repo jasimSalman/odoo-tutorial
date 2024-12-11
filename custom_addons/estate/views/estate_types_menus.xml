@@ -1,0 +1,5 @@
+<odoo>
+    <menuitem id="estate_types_menu" name="Settings">
+        <menuitem id="estate_types_submenu" action="action_real_estate_types"/>
+    </menuitem>
+</odoo>

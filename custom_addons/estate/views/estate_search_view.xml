@@ -4,20 +4,15 @@
         <field name="model">real.estate.property</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name" string="Property Name"/>
+                <field name="name" string="Title"/>
                 <field name="postcode" string="Postcode"/>
                 <field name="expected_price" string="Expected Price"/>
                 <field name="bedrooms" string="Bedrooms"/>
                 <field name="living_area" string="Living Area (sqm)"/>
                 <field name="facades" string="Facades"/>
 
-                <filter string="Active Properties" name="filter_active" domain="[('active','=',True)]"/>
-                <filter string="Available Properties" name="filter_available" domain="[('date_availability','&lt;=',context_today())]"/>
-                <filter string="Available Properties (State)" name="filter_available_state" domain="[('state', 'in', ['New', 'Offer Received'])]"/>
-
+                <filter string="Available" name="filter_available_state" domain="[('state', 'in', ['New', 'Offer Received'])]"/>
                 <group expand="1" string="Group by">
-                    <filter string="Property Type" name="filter_property_type" context="{'group_by':'property_type'}"/>
-                    <filter string="State" name="filter_state" context="{'group_by':'state'}"/>
                     <filter string="Postcode" name="filter_postcode" context="{'group_by':'postcode'}"/>
                 </group>
             </search>
@@ -26,7 +21,7 @@
 
     <record id="action_estate_property_search" model="ir.actions.act_window">
         <field name="name">Real Estate Properties</field>
-        <field name="res_model">estate.property</field>
+        <field name="res_model">real.estate.property</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_estate_property_search"/>
     </record>
