@@ -4,6 +4,7 @@ from datetime import timedelta
 class RealEstatePropertyTypes(models.Model):
     _name = 'estate.property.offer'
     _description = 'Real Estate Property Offers'
+    _order = "price desc"
 
     price = fields.Float(string="Price")
     status = fields.Selection(
@@ -18,7 +19,7 @@ class RealEstatePropertyTypes(models.Model):
 
     validity = fields.Integer(string="Validity", default=7)
 
-    date_deadline = fields.Date(compute="_compue_deadline", inverse="_inverse_date_deadline",store=True)
+    date_deadline = fields.Date(compute="_compute_deadline", inverse="_inverse_date_deadline",store=True)
 
 
     _sql_constraints = [
@@ -28,7 +29,7 @@ class RealEstatePropertyTypes(models.Model):
     ]
 
 
-    def _compue_deadline(self):
+    def _compute_deadline(self):
         for record in self:
             if record.create_date and record.validity:
                 record.date_deadline = timedelta(days=record.validity) + record.create_date 

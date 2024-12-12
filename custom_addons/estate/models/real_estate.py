@@ -6,7 +6,8 @@ from odoo.tools.float_utils import float_compare, float_is_zero
 
 class RealEstateProperty(models.Model):
     _name = 'real.estate.property'
-    _description = 'Real Estate Property'    
+    _description = 'Real Estate Property'   
+    _order = "id desc" 
 
     name = fields.Char(string="title", required=True)
     description = fields.Text(string="Description")
@@ -51,6 +52,7 @@ class RealEstateProperty(models.Model):
     )
 
     property_type_id = fields.Many2one("estate.property.type", string="Types")
+    
     seller = fields.Many2one("res.partner", string="Salesman", default=lambda self: self.env.user.partner_id)
     buyer = fields.Many2one("res.users", string="Buyer", copy=False)
 
@@ -110,11 +112,11 @@ class RealEstateProperty(models.Model):
             if record.state != 'sold':
                 record.state = 'sold'
 
-    @api.constrains("offer_ids.price")
+    @api.constrains("selling_price", "expected_price", "offer_ids.price")
     def _check_selling_price(self):
-            for record in self:
-                if float_is_zero(record.selling_price, precision_digits=2):
-                    continue
+        for record in self:
+            if float_is_zero(record.selling_price, precision_digits=2):
+                continue
 
-                if float_compare(record.selling_price, record.expected_price * 0.9, precision_digits=2) < 0:
-                    raise ValidationError(('The selling price cannot be lower than 90% of the expected price.'))
+            if float_compare(record.selling_price, record.expected_price * 0.9, precision_digits=2) < 0:
+                raise ValidationError(('The selling price cannot be lower than 90% of the expected price.'))
