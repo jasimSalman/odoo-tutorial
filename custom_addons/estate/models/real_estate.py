@@ -54,6 +54,7 @@ class RealEstateProperty(models.Model):
     property_type_id = fields.Many2one("estate.property.type", string="Types")
     
     seller = fields.Many2one("res.partner", string="Salesman", default=lambda self: self.env.user.partner_id)
+   
     buyer = fields.Many2one("res.users", string="Buyer", copy=False)
 
     tag_ids = fields.Many2many("estate.property.tag" )
@@ -63,6 +64,10 @@ class RealEstateProperty(models.Model):
     total_area = fields.Float(compute="_compute_total_area", string="Total Area")
 
     best_price = fields.Float(compute="_compute_best_price", string="Best Offer")
+
+    user_id = fields.Many2one(
+        'res.users',  
+        string="Salesperson")
 
 
     _sql_constraints = [
@@ -120,3 +125,11 @@ class RealEstateProperty(models.Model):
 
             if float_compare(record.selling_price, record.expected_price * 0.9, precision_digits=2) < 0:
                 raise ValidationError(('The selling price cannot be lower than 90% of the expected price.'))
+
+    
+    @api.model
+    def ondelete(self):
+        for record in self:
+            if record.state not in ["new", "cancelled"]:
+                raise UserError("You cannot delete this property.")
+        return super().unlink()

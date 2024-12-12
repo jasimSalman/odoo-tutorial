@@ -8,7 +8,7 @@
                 <field name="postcode" string="Postcode"/>
                 <field name="expected_price" string="Expected Price"/>
                 <field name="bedrooms" string="Bedrooms"/>
-                <field name="living_area" string="Living Area (sqm)"/>
+                <field name="living_area" string="Living Area (sqm)" filter_domain="[('living_area', '>=', 100)" />
                 <field name="facades" string="Facades"/>
                 <field name="property_type_id" string="Type"/>
 
@@ -25,5 +25,6 @@
         <field name="res_model">real.estate.property</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_estate_property_search"/>
+        <field name="context">{'search_default_filter_available_state': True}</field>
     </record>
 </odoo>
