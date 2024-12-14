@@ -54,10 +54,13 @@ class RealEstateProperty(models.Model):
     property_type_id = fields.Many2one("estate.property.type", string="Types")
     
     seller = fields.Many2one("res.partner", string="Salesman", default=lambda self: self.env.user.partner_id)
-   
+
     buyer = fields.Many2one("res.users", string="Buyer", copy=False)
 
-    tag_ids = fields.Many2many("estate.property.tag" )
+    tag_ids = fields.Many2many(
+        'estate.property.tag', 
+        string="Tags", 
+    )
 
     offer_ids = fields.One2many("estate.property.offer", "property_id")
 
@@ -72,8 +75,8 @@ class RealEstateProperty(models.Model):
 
     _sql_constraints = [
         ('expected_price_positive', 
-         'CHECK(expected_price > 0)', 
-         'Expected Price must be strictly positive!'),
+        'CHECK(expected_price > 0)', 
+        'Expected Price must be strictly positive!'),
     ]
 
 
@@ -117,7 +120,7 @@ class RealEstateProperty(models.Model):
             if record.state != 'sold':
                 record.state = 'sold'
 
-    @api.constrains("selling_price", "expected_price", "offer_ids.price")
+    @api.constrains("selling_price", "expected_price", "offer_ids")
     def _check_selling_price(self):
         for record in self:
             if float_is_zero(record.selling_price, precision_digits=2):
@@ -126,10 +129,8 @@ class RealEstateProperty(models.Model):
             if float_compare(record.selling_price, record.expected_price * 0.9, precision_digits=2) < 0:
                 raise ValidationError(('The selling price cannot be lower than 90% of the expected price.'))
 
-    
-    @api.model
-    def ondelete(self):
+    def unlink(self, **kwargs):
         for record in self:
             if record.state not in ["new", "cancelled"]:
                 raise UserError("You cannot delete this property.")
-        return super().unlink()
+        return super().unlink(**kwargs)

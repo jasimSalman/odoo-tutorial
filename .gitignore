@@ -32,6 +32,7 @@ requirements.txt
 SECURITY.md
 setup.cfg
 setup.py
+odoo.conf
 
 # odoo filestore
 odoo/filestore

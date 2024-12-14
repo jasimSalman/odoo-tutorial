@@ -1,6 +1,6 @@
 <odoo>
     <record id="estate_types_list" model="ir.ui.view">
-        <field name="name">estate.types.tree</field>
+        <field name="name">estate.types.list</field>
         <field name="model">estate.property.type</field>
         <field name="arch" type="xml">
             <list string="Property Types">
@@ -9,7 +9,6 @@
             </list>
         </field>
     </record>
-
 
     <record id="estate_types_form" model="ir.ui.view">
         <field name="name">estate.types.form</field>
@@ -23,12 +22,18 @@
                     <group>
                         <field name="offer_count" readonly="1"/>
                         <button name="%(action_estate_property_offer)d" type="action"
-                        string="View Offers"/>
+                        class="btn-primary"
+                        icon="fa-list"
+                        />
                     </group>
                     <notebook>
                         <page string="Properties">
                             <field name="property_ids" mode="list,form">
-                                <list>
+                                <list
+                                decoration-success="state == 'offer received'" 
+                                decoration-muted="state == 'sold'"
+                                decoration-bf="state == 'offer accepted'" 
+                                decoration-primary="state == 'offer accepted'">
                                     <field name="name" string="Title"/>
                                     <field name="expected_price" string="Expected Price"/>
                                     <field name="state" string="Status"/>
@@ -38,6 +43,19 @@
                     </notebook>
                 </sheet>
             </form>
+        </field>
+    </record>
+
+    <record id="view_estate_offer_list" model="ir.ui.view">
+        <field name="name">estate.offer.list</field>
+        <field name="model">estate.property.offer</field>
+        <field name="arch" type="xml">
+            <list string="Offers">
+                <field name="price" string="Price"/>
+                <field name="partner_id" string="Partner"/>
+                <field name="validity" string="Validity"/>
+                <field name="date_deadline" string="Deatline"/>
+            </list>
         </field>
     </record>
     

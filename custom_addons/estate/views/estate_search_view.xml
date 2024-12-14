@@ -8,13 +8,14 @@
                 <field name="postcode" string="Postcode"/>
                 <field name="expected_price" string="Expected Price"/>
                 <field name="bedrooms" string="Bedrooms"/>
-                <field name="living_area" string="Living Area (sqm)" filter_domain="[('living_area', '>=', 100)" />
+                <field name="living_area" string="Living Area (sqm)" filter_domain="[('living_area', '>=', self)]"/>
                 <field name="facades" string="Facades"/>
                 <field name="property_type_id" string="Type"/>
 
-                <filter string="Available" name="filter_available_state" domain="[('state', 'in', ['New', 'Offer Received'])]"/>
+                <filter string="Available" name="filter_available_state" domain="[('state', 'in', ['new', 'offer received'])]"/>
+
                 <group expand="1" string="Group by">
-                    <filter string="Postcode" name="filter_postcode" context="{'group_by':'postcode'}"/>
+                    <filter string="Postcode" name="filter_postcode" context="{'group_by': 'postcode'}"/>
                 </group>
             </search>
         </field>
@@ -23,8 +24,8 @@
     <record id="action_estate_property_search" model="ir.actions.act_window">
         <field name="name">Real Estate Properties</field>
         <field name="res_model">real.estate.property</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="view_estate_property_search"/>
-        <field name="context">{'search_default_filter_available_state': True}</field>
+        <field name="context">{'search_default_filter_available_state': 1}</field>
     </record>
 </odoo>

@@ -3,11 +3,12 @@ from datetime import timedelta
 from odoo.exceptions import UserError
 import logging
 
+_logger = logging.getLogger(__name__)
+
 class RealEstatePropertyTypes(models.Model):
     _name = 'estate.property.offer'
     _description = 'Real Estate Property Offers'
     _order = "price desc"
-    _logger = logging.getLogger(__name__)
 
     price = fields.Float(string="Price")
     status = fields.Selection(
@@ -18,7 +19,8 @@ class RealEstatePropertyTypes(models.Model):
         string="Status", copy=False)
 
     partner_id = fields.Many2one("res.partner", required=True)
-    property_id = fields.Many2one("real.estate.property", required=True)
+    
+    property_id = fields.Many2one("real.estate.property", required=True, ondelete="cascade")
 
     validity = fields.Integer(string="Validity", default=7)
 
@@ -66,23 +68,32 @@ class RealEstatePropertyTypes(models.Model):
                 record.status = "accepted"
                 record.property_id.selling_price = record.price
                 record.property_id.buyer = self.env.user 
+                record.property_id.state = "offer accepted"
     
     @api.model
-    def oncreate(self, vals):
-        property_id = vals.get('property_id')
-        self._logger.info(f"Received property_id: {property_id}")
-        
-        property_record = self.env['real.estate.property'].browse(property_id)
-        self._logger.info(f"Property record: {property_record}")
+    def create(self, vals_list):
+        if not isinstance(vals_list, list):
+            vals_list = [vals_list]
 
-        property_record.state = 'offer received'
-        self._logger.info(f"Property state set to: {property_record.state}")
+        for vals in vals_list:
+            property_id = vals.get('property_id')
+            if not property_id:
+                raise UserError("Property ID is missing.")
 
-        existing_offers = self.env['estate.property.offer'].search([('property_id', '=', property_id)])
-        self._logger.info(f"Existing offers: {existing_offers}")
+            price = vals.get('price')
+            if not price:
+                raise UserError("Offer price is missing.")
 
-        for offer in existing_offers:
-            self._logger.info(f"Checking if new offer price {vals['price']} is less than existing offer price {offer.price}")
-            if vals['price'] < offer.price:
-                raise UserError("Your offer is less than the existing offers.")
-        return super().create(vals)
+            property_record = self.env['real.estate.property'].browse(property_id)
+            if not property_record.exists():
+                raise UserError("The property record does not exist.")
+
+            property_record.state = 'offer received'
+            existing_offers = self.env['estate.property.offer'].search([('property_id', '=', property_id)])
+            _logger.info(f"Existing offers: {existing_offers}")
+
+            for offer in existing_offers:
+                _logger.info(f"Checking if new offer price {price} is less than existing offer price {offer.price}")
+                if price < offer.price:
+                    raise UserError(f"Your offer ({price}) is less than an existing offer ({offer.price}).")
+        return super(RealEstatePropertyTypes, self).create(vals_list)

@@ -3,7 +3,7 @@
         <field name="name">estate.tags.lsit</field>
         <field name="model">estate.property.tag</field>
         <field name="arch" type="xml">
-            <list string="Property tags">
+            <list string="Property tags" editable="bottom">
                 <field name="name" string="Name"/>
             </list>
         </field>
